@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>단어테스트 | Story of an Hour · All Summer in a Day · The Lottery</title>
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#f6f5f1; --card:#ffffff; --ink:#1f2328; --sub:#6b7280; --line:#e4e2dc;
+  --accent:#2f5d8a; --accent-ink:#ffffff;
+  --ok:#1f7a4d; --ok-bg:#e3f4ea; --bad:#b3261e; --bad-bg:#fbe7e5;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16181c; --card:#1f2228; --ink:#eceff3; --sub:#9aa3af; --line:#2f343c;
+    --accent:#7fb0e0; --accent-ink:#10161d;
+    --ok:#6fd09b; --ok-bg:#1b3327; --bad:#ff8f87; --bad-bg:#3a1f1d;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16181c; --card:#1f2228; --ink:#eceff3; --sub:#9aa3af; --line:#2f343c;
+  --accent:#7fb0e0; --accent-ink:#10161d;
+  --ok:#6fd09b; --ok-bg:#1b3327; --bad:#ff8f87; --bad-bg:#3a1f1d;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR","Malgun Gothic",sans-serif;
+  line-height:1.55}
+.wrap{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:22px;margin:8px 0 4px}
+.sub{color:var(--sub);font-size:14px;margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+.card h2{font-size:15px;margin:0 0 10px;color:var(--sub);font-weight:600}
+label.chk{display:flex;align-items:center;gap:10px;padding:9px 0;cursor:pointer;border-bottom:1px dashed var(--line)}
+label.chk:last-child{border-bottom:0}
+label.chk input{width:18px;height:18px;accent-color:var(--accent)}
+label.chk small{color:var(--sub);margin-left:auto}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.pill{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:999px;font-size:14px;cursor:pointer}
+.pill.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{display:block;width:100%;border:0;background:var(--accent);color:var(--accent-ink);padding:14px;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--sub);margin-bottom:8px}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.tag{display:inline-block;font-size:12px;color:var(--sub);border:1px solid var(--line);border-radius:6px;padding:1px 8px;margin-bottom:10px}
+.sent{font-size:19px;line-height:1.7;margin:4px 0 16px;font-family:Georgia,"Times New Roman",serif}
+.blank{display:inline-block;min-width:90px;border-bottom:2px solid var(--ink);text-align:center;font-weight:700}
+.blank.ok{color:var(--ok);border-color:var(--ok)}
+.blank.bad{color:var(--bad);border-color:var(--bad)}
+.opt{display:flex;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);color:var(--ink);
+  border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;margin-bottom:9px;font-size:17px;cursor:pointer;font-family:inherit}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .n{color:var(--sub);font-size:15px;min-width:20px}
+.opt.right{background:var(--ok-bg);border-color:var(--ok)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad)}
+.opt:disabled{cursor:default}
+.fb{border-radius:12px;padding:12px 14px;margin:6px 0 4px;font-size:15px}
+.fb.ok{background:var(--ok-bg);color:var(--ok)}
+.fb.bad{background:var(--bad-bg);color:var(--bad)}
+.fb b{font-size:17px}
+.fb .ko{color:var(--ink);margin-top:2px}
+.score{font-size:46px;font-weight:800;text-align:center;margin:8px 0 0}
+.score small{font-size:18px;color:var(--sub);font-weight:500}
+.center{text-align:center;color:var(--sub);margin:4px 0 16px}
+.wl{border-top:1px solid var(--line);padding:12px 0}
+.wl:first-of-type{border-top:0}
+.wl .w{font-weight:700;font-size:17px}
+.wl .k{color:var(--sub);font-size:14px}
+.wl .s{font-family:Georgia,serif;font-size:15px;margin-top:4px}
+.wl .s b{color:var(--ok)}
+.hidden{display:none}
+.mini{font-size:13px;color:var(--sub)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- START -->
+<section id="start">
+  <h1>📝 단어테스트</h1>
+  <p class="sub">The Story of an Hour · All Summer in a Day · The Lottery</p>
+
+  <div class="card">
+    <h2>범위 선택</h2>
+    <label class="chk"><input type="checkbox" id="s-hour" checked> The Story of an Hour <small id="c-hour"></small></label>
+    <label class="chk"><input type="checkbox" id="s-summer" checked> All Summer in a Day <small id="c-summer"></small></label>
+    <label class="chk"><input type="checkbox" id="s-lottery" checked> The Lottery <small id="c-lottery"></small></label>
+  </div>
+
+  <div class="card">
+    <h2>문제 수</h2>
+    <div class="row" id="countRow">
+      <button class="pill" data-n="10">10</button>
+      <button class="pill" data-n="20">20</button>
+      <button class="pill on" data-n="30">30</button>
+      <button class="pill" data-n="0">전체</button>
+    </div>
+  </div>
+
+  <button class="btn" id="startBtn">시작</button>
+  <button class="btn ghost" id="noteBtn">오답노트 풀기 (<span id="noteCnt">0</span>)</button>
+  <p class="mini" style="margin-top:12px">틀린 문제는 오답노트에 쌓이고, 오답노트에서 맞히면 지워짐. 단축키: 1~4 선택, Enter 다음.</p>
+</section>
+
+<!-- QUIZ -->
+<section id="quiz" class="hidden">
+  <div class="top"><span id="qTitle"></span><span id="qScore"></span></div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="card">
+    <span class="tag" id="qTag"></span>
+    <div class="sent" id="qSent"></div>
+    <div id="opts"></div>
+    <div id="fb"></div>
+    <button class="btn hidden" id="nextBtn">다음 ▶</button>
+  </div>
+  <button class="pill" id="quitBtn">그만하기</button>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="hidden">
+  <h1>결과</h1>
+  <div class="card">
+    <div class="score"><span id="rScore"></span> <small id="rTotal"></small></div>
+    <p class="center" id="rMsg"></p>
+    <div id="wrongBox"></div>
+  </div>
+  <button class="btn" id="retryWrong">이번에 틀린 것만 다시 풀기</button>
+  <button class="btn ghost" id="home">처음으로</button>
+</section>
+
+</div>
+
+<script>
+/* set | word | pos | 한글뜻 | 예문 (___ = 빈칸) */
+const RAW = `
+hour|afflicted|adj|괴로움을 겪는|The village, ___ by a long drought, begged the government for help.
+hour|veiled|adj|감춰진, 은근한|She made a ___ threat, never saying openly what she would do.
+hour|intelligence|n|지능, 정보|The spy sent secret ___ about the enemy's army back to the capital.
+hour|hasten|v|서두르다|We must ___ if we want to catch the last train.
+hour|forestall|v|미연에 방지하다|He tried to ___ the argument by apologizing before anyone could complain.
+hour|bear|v|참다, 견디다|I can't ___ the pain in my knee any longer.
+hour|paralyzed|adj|움직이지 못하는|He stood ___ with fear and could not take a single step.
+hour|exhaustion|n|기진맥진|After the marathon, she collapsed from ___.
+hour|aquiver|adj|(감정으로) 떨리는|Her voice was ___ with excitement as she opened the letter.
+hour|ware|n|상품, 물품|The potter spread out her ___ on a table at the market.
+hour|bespoke|adj|맞춤 제작의|He wore a ___ suit that had been made to fit only him.
+hour|repression|n|억압, 억제|Years of ___ left him unable to show his true feelings.
+hour|yonder|adv|저쪽에|The old farmhouse stands over ___, on the far side of the hill.
+hour|suspension|n|일시 중단|The ___ of the match was caused by heavy rain.
+hour|subtle|adj|미묘한, 섬세한|There was a ___ change in his expression that few people noticed.
+hour|elusive|adj|찾기/이해하기 어려운|The answer to the puzzle stayed ___ no matter how hard we thought.
+hour|tumultuously|adv|소란스럽고 격렬하게|The crowd cheered ___ when the singer walked onto the stage.
+hour|strive|v|노력하다, 애쓰다|Students should ___ to do their best every single day.
+hour|vacant|adj|비어 있는|The seat beside me was ___, so she sat down.
+hour|keen|adj|날카로운, 예리한|The detective had a ___ eye for small details.
+hour|monstrous|adj|흉측한, 끔찍한|The dictator's ___ crimes shocked the whole world.
+hour|exalted|adj|높은 지위의, 큰 기쁨의|The king held an ___ position far above all the other nobles.
+hour|dismiss|v|묵살하다|You should not ___ his advice without thinking about it first.
+hour|trivial|adj|사소한|Don't worry about such a ___ mistake; it really doesn't matter.
+hour|persistence|n|끈기, 인내|Her ___ finally paid off when she passed the exam on the fifth try.
+hour|illumination|n|빛, 조명, 깨달음|The only ___ in the cellar came from a single candle.
+hour|self-assertion|n|자기 주장|Learning to say no was an important step in her ___.
+hour|impulse|n|충동|On an ___ she bought the dress without even checking the price.
+hour|implore|v|간청하다|I ___ you to tell me the truth before it's too late.
+hour|elixir|n|영약, 만병통치약|The old legend spoke of an ___ that could make people live forever.
+hour|run riot|v|제멋대로 뻗어나가다|If you leave the kids alone all day, they will ___ in the house.
+hour|shudder|v|몸서리치다|The icy wind made him ___ .
+hour|importunity|n|끈질긴 부탁|She finally gave in to his constant ___.
+hour|feverish|adj|열광적인, 열이 있는 듯한|The crowd waited in ___ excitement for the results.
+hour|unwittingly|adv|자신도 모르게|He ___ revealed the secret by mentioning the surprise party.
+hour|descend|v|내려가다|We began to ___ the mountain before it got dark.
+hour|composedly|adv|침착하게|Even in danger, she answered every question ___.
+summer|peer|v|응시하다, 유심히 보다|He leaned forward to ___ through the foggy window.
+summer|compound|v|악화시키다, 혼합하다|Don't ___ the problem by lying about it.
+summer|concussion|n|뇌진탕; 충격|The boxer suffered a ___ after being hit hard on the head.
+summer|remembrance|n|기억, 추억|They lit candles in ___ of those who had died.
+summer|tremble|v|떨다|Her hands began to ___ with fear.
+summer|protest|v|항의하다|Workers gathered in the square to ___ against the new law.
+summer|slacken|v|느슨해지다, 약해지다|The rain began to ___ in the afternoon.
+summer|spoke|n|바퀴살|A broken ___ made the bicycle wheel wobble.
+summer|shove|v|(거칠게) 밀다|Don't ___ people in the crowded hallway.
+summer|drenched|adj|흠뻑 젖은|We came home ___ after walking in the storm.
+summer|patterning|adj|무늬를 이루는|The sunlight was ___ the floor with the shadows of leaves.
+summer|savagely|adv|거칠게, 잔인하게|The wolves fought ___ over the scrap of meat.
+summer|seize|v|붙잡다, 움켜쥐다|The thief tried to ___ the bag and run.
+summer|surge|v|밀려들다, 급증하다|Water began to ___ into the room through the broken door.
+summer|plead|v|간청하다|The prisoner continued to ___ for mercy.
+summer|muffled|adj|(소리가) 죽은, 약해진|We heard ___ voices through the thick wall.
+summer|glance|v|흘끗 보다|She would ___ at the clock every few seconds.
+summer|avalanche|n|눈사태|A huge ___ of snow buried the mountain road.
+summer|apparatus|n|장치, 기구|The lab has a special ___ for measuring heat.
+summer|repercussion|n|울림, 반향(소리)|The ___ of the thunder shook the windows of the school.
+summer|tremor|n|떨림, 진동|A small ___ in the ground woke us in the middle of the night.
+summer|standstill|n|정지, 멈춤|Traffic came to a ___ because of the accident.
+summer|immense|adj|엄청난, 거대한|The giant whale was an ___ creature, bigger than the boat.
+summer|squint|v|눈을 가늘게 뜨다|He had to ___ because the sun was so bright.
+summer|savor|v|음미하다|I like to ___ every bite of really good chocolate.
+summer|wail|v|울부짖다|The baby began to ___ loudly in the night.
+summer|solemn|adj|엄숙한, 진지한|The judge spoke in a ___ voice as he read the sentence.
+lottery|profusely|adv|풍부하게, 많이|He apologized ___ for being late.
+lottery|boisterous|adj|시끌벅적한|The ___ children ran around the playground, screaming with laughter.
+lottery|reprimand|v|질책하다|The teacher had to ___ him for cheating on the test.
+lottery|raid|v|습격하다|Thieves planned to ___ the warehouse at night.
+lottery|survey|v|살펴보다, 둘러보다|She stood on the hill to ___ the valley below.
+lottery|reluctantly|adv|마지못해|He ___ agreed to help with the cleaning.
+lottery|duck|v|몸을 숙이다|I had to ___ to avoid hitting my head on the low beam.
+lottery|jovial|adj|쾌활한, 명랑한|Our ___ host welcomed everyone with a big smile.
+lottery|scold|v|꾸짖다|Mom will ___ me if I come home late again.
+lottery|murmur|v|중얼거리다|She would ___ softly to herself while she worked.
+lottery|paraphernalia|n|장비, 도구 일체|The fishing ___ filled the entire trunk of the car.
+lottery|precede|v|~보다 앞서다|A short speech will ___ the main event.
+lottery|perfunctory|adj|형식적인, 무성의한|He gave only a ___ nod and kept on walking.
+lottery|duly|adv|정해진 대로|The letters were ___ delivered on Monday, just as planned.
+lottery|lapse|v|중단되다, 폐지되다|If you forget to pay, your insurance will ___.
+lottery|interminably|adv|끝없이, 지루할 정도로|The speech dragged on ___, and everyone grew bored.
+lottery|crane|v|목을 길게 빼다|People had to ___ their necks to see the parade.
+lottery|soberly|adv|진지하게, 엄숙하게|He listened ___ as the doctor explained the test results.
+lottery|disengage|v|~에서 빠져나오다|She tried to ___ herself from the boring conversation.
+lottery|gravely|adv|진지하게, 엄숙하게|The doctor shook his head ___ and said nothing.
+lottery|petulantly|adv|짜증스럽게, 심술궂게|The child folded his arms and answered ___.
+lottery|stoutly|adv|단호하게, 완강하게|He ___ denied all the charges against him.
+lottery|daintily|adv|섬세하고 조심스럽게|She picked up the teacup ___ with two fingers.
+lottery|defiantly|adv|반항적으로|The teenager stared ___ at his father and refused to move.
+lottery|snatch|v|홱 낚아채다|A bird flew down to ___ the bread right out of my hand.
+`.trim().split("\n").map((l,i)=>{const [set,word,pos,ko,sent]=l.split("|");return {id:i,set,word,pos,ko,sent};});
+
+/* 뜻이 비슷해서 보기에 같이 나오면 헷갈리는 쌍 → 같이 안 나오게 */
+const CONFLICT = [
+  ["soberly","gravely"],["reprimand","scold"],["tremble","shudder"],["seize","snatch"],
+  ["glance","peer"],["petulantly","defiantly"],["stoutly","defiantly"],["immense","monstrous"],
+  ["implore","plead"],["hasten","strive"],["tremor","shudder"],["wail","plead"],["suspension","standstill"],
+  ["subtle","elusive"],["intelligence","illumination"],["bear","survey"],["profusely","tumultuously"],
+  ["boisterous","jovial"],["trivial","subtle"]
+];
+const CUSTOM_DISTRACTORS = { patterning:["peering","slackening","shoving"] };
+
+const $ = id => document.getElementById(id);
+const shuffle = a => { a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const conflicts = (a,b) => CONFLICT.some(p=>(p[0]===a&&p[1]===b)||(p[0]===b&&p[1]===a));
+
+/* 오답노트 (localStorage 되면 저장, 안 되면 세션 한정) */
+let memNote = [];
+function loadNote(){ try{ const v=localStorage.getItem("vocab_wrong_note"); if(v) return JSON.parse(v);}catch(e){} return memNote; }
+function saveNote(arr){ memNote=arr; try{ localStorage.setItem("vocab_wrong_note", JSON.stringify(arr)); }catch(e){} }
+function noteIds(){ return loadNote().filter(id=>RAW[id]); }
+
+let state = {};
+let wantCount = 30;
+
+function show(id){ ["start","quiz","result"].forEach(s=>$(s).classList.toggle("hidden", s!==id)); window.scrollTo(0,0); }
+
+function refreshStart(){
+  ["hour","summer","lottery"].forEach(s=>$("c-"+s).textContent = RAW.filter(w=>w.set===s).length+"단어");
+  $("noteCnt").textContent = noteIds().length;
+  $("noteBtn").disabled = noteIds().length===0;
+}
+
+document.querySelectorAll("#countRow .pill").forEach(b=>{
+  b.onclick=()=>{ document.querySelectorAll("#countRow .pill").forEach(x=>x.classList.remove("on")); b.classList.add("on"); wantCount=+b.dataset.n; };
+});
+
+$("startBtn").onclick=()=>{
+  const sets=["hour","summer","lottery"].filter(s=>$("s-"+s).checked);
+  if(!sets.length){ alert("범위를 하나 이상 골라라"); return; }
+  let pool = RAW.filter(w=>sets.includes(w.set));
+  pool = shuffle(pool);
+  if(wantCount>0) pool = pool.slice(0,wantCount);
+  begin(pool.map(w=>w.id), "테스트");
+};
+$("noteBtn").onclick=()=>{ begin(shuffle(noteIds()), "오답노트"); };
+
+function makeChoices(item){
+  let pool = RAW.filter(w=>w.id!==item.id && w.pos===item.pos && !conflicts(w.word,item.word));
+  let d;
+  if(CUSTOM_DISTRACTORS[item.word]) d = CUSTOM_DISTRACTORS[item.word].slice();
+  else d = shuffle(pool).slice(0,3).map(w=>w.word);
+  if(d.length<3){ // pos 풀 부족하면 아무거나
+    const more = shuffle(RAW.filter(w=>w.id!==item.id && !d.includes(w.word) && !conflicts(w.word,item.word))).slice(0,3-d.length).map(w=>w.word);
+    d = d.concat(more);
+  }
+  return shuffle([item.word,...d]);
+}
+
+function begin(ids, title){
+  state = { ids, i:0, correct:0, wrong:[], title, answered:false };
+  show("quiz");
+  render();
+}
+
+function render(){
+  const item = RAW[state.ids[state.i]];
+  state.answered=false;
+  $("qTitle").textContent = state.title+" "+(state.i+1)+" / "+state.ids.length;
+  $("qScore").textContent = "정답 "+state.correct;
+  $("bar").style.width = (state.i/state.ids.length*100)+"%";
+  $("qTag").textContent = {hour:"The Story of an Hour",summer:"All Summer in a Day",lottery:"The Lottery"}[item.set];
+  $("qSent").innerHTML = item.sent.replace("___", '<span class="blank" id="blank">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>');
+  const choices = makeChoices(item);
+  state.choices = choices;
+  $("opts").innerHTML = choices.map((c,k)=>`<button class="opt" data-w="${c}"><span class="n">${"①②③④"[k]}</span><span>${c}</span></button>`).join("");
+  $("fb").innerHTML=""; $("nextBtn").classList.add("hidden");
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answer(b.dataset.w));
+}
+
+function answer(w){
+  if(state.answered) return;
+  state.answered=true;
+  const item = RAW[state.ids[state.i]];
+  const ok = w===item.word;
+  document.querySelectorAll(".opt").forEach(b=>{
+    b.disabled=true;
+    if(b.dataset.w===item.word) b.classList.add("right");
+    else if(b.dataset.w===w) b.classList.add("wrong");
+  });
+  const bl=$("blank"); bl.textContent=item.word; bl.classList.add(ok?"ok":"bad");
+  let note = noteIds();
+  if(ok){
+    state.correct++;
+    note = note.filter(id=>id!==item.id);
+    $("fb").innerHTML = `<div class="fb ok">⭕ 정답 — <b>${item.word}</b> <span class="mini">(${item.pos})</span><div class="ko">${item.ko}</div></div>`;
+  } else {
+    state.wrong.push(item.id);
+    if(!note.includes(item.id)) note.push(item.id);
+    $("fb").innerHTML = `<div class="fb bad">❌ 오답 — 정답은 <b>${item.word}</b> <span class="mini">(${item.pos})</span><div class="ko">${item.ko}</div></div>`;
+  }
+  saveNote(note);
+  $("qScore").textContent = "정답 "+state.correct;
+  const nb=$("nextBtn"); nb.classList.remove("hidden");
+  nb.textContent = state.i+1>=state.ids.length ? "결과 보기 ▶" : "다음 ▶";
+  nb.focus();
+}
+
+$("nextBtn").onclick=()=>{
+  state.i++;
+  if(state.i>=state.ids.length) finish(); else render();
+};
+$("quitBtn").onclick=()=>{ if(confirm("그만할래? 지금까지 푼 것만 결과로 본다.")){ state.ids=state.ids.slice(0,state.i+(state.answered?1:0)); if(state.ids.length===0){refreshStart();show("start");} else finish(); } };
+
+function finish(){
+  show("result");
+  const total=state.ids.length, c=state.correct;
+  $("rScore").textContent=c; $("rTotal").textContent="/ "+total;
+  const pct=Math.round(c/total*100);
+  $("rMsg").textContent = pct+"점 · "+(pct===100?"만점 🎉":pct>=80?"좋음":pct>=60?"좀 더 보자":"다시 외워라");
+  const box=$("wrongBox");
+  if(!state.wrong.length){ box.innerHTML='<p class="center">틀린 문제 없음 👍</p>'; $("retryWrong").classList.add("hidden"); }
+  else{
+    $("retryWrong").classList.remove("hidden");
+    box.innerHTML='<h2 style="font-size:15px;color:var(--sub)">틀린 단어 ('+state.wrong.length+')</h2>'+
+      state.wrong.map(id=>{const w=RAW[id];
+        return `<div class="wl"><div class="w">${w.word} <span class="k">(${w.pos}) ${w.ko}</span></div><div class="s">${w.sent.replace("___","<b>"+w.word+"</b>")}</div></div>`;}).join("");
+  }
+}
+$("retryWrong").onclick=()=>begin(shuffle(state.wrong), "오답 재도전");
+$("home").onclick=()=>{ refreshStart(); show("start"); };
+
+document.addEventListener("keydown",e=>{
+  if($("quiz").classList.contains("hidden")) return;
+  if(!state.answered && ["1","2","3","4"].includes(e.key)){ const c=state.choices[+e.key-1]; if(c) answer(c); }
+  else if(state.answered && e.key==="Enter"){ e.preventDefault(); $("nextBtn").click(); }
+});
+
+refreshStart();
+</script>
+</body>
+</html>
